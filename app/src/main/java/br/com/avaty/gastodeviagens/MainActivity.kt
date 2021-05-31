@@ -7,14 +7,13 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import java.math.BigDecimal
-import java.math.RoundingMode
 
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var distancia: EditText
-    private lateinit var preco: EditText
-    private lateinit var autonomia: EditText
+    lateinit var distancia: EditText
+    lateinit var preco: EditText
+    lateinit var autonomia: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,31 +23,50 @@ class MainActivity : AppCompatActivity() {
         preco = findViewById(R.id.edit_preco)
         autonomia = findViewById(R.id.edit_autonomia)
 
+        distancia.addTextChangedListener(object : ValidacaoEditText(distancia) {
+            override fun validate(edit: EditText?, text: String?) {
+                /*if (text.equals("1")) {
+                    edit?.error = "Este campo é obrigatório"
+                }*/
+            }
+        })
+
+        preco.addTextChangedListener(object : ValidacaoEditText(preco) {
+            override fun validate(edit: EditText?, text: String?) {
+                /*if (preco.toString().isEmpty()) {
+                    preco.error = "Este campo é obrigatório"
+                }*/
+            }
+        })
+        autonomia.addTextChangedListener(object : ValidacaoEditText(autonomia) {
+            override fun validate(edit: EditText?, text: String?) {
+                /*if (autonomia.toString().isEmpty()) {
+                    autonomia.error = "Este campo é obrigatório"
+                }*/
+            }
+        })
+
+
         val buttonCalcular = findViewById<Button>(R.id.button_calcular)
         buttonCalcular.setOnClickListener { l -> calculaGasto(l) }
     }
 
     fun calculaGasto(view: View) {
+        //distancia *preco / autonomia
         if (view.id == R.id.button_calcular) {
 
-            if (distancia.text.toString().isNotEmpty() && preco.text.toString()
-                    .isNotEmpty() && autonomia.text.toString().isNotEmpty()
+            if (distancia.text.toString().isNotEmpty() && preco.text.toString().isNotEmpty() &&
+                autonomia.text.toString().isNotEmpty()
             ) {
                 val total =
                     BigDecimal(
                         (distancia.text.toString().toDouble() * preco.text.toString().toDouble()) /
                                 autonomia.text.toString().toDouble()
-                    ).setScale(2, RoundingMode.HALF_EVEN)
+                    ).setScale(2)
+
                 findViewById<TextView>(R.id.text_total).text = "R$ $total"
             } else {
-                if (distancia.text.toString().isEmpty())
-                    distancia.error = "Este campo é obrigatório"
-
-                if (preco.text.toString().isEmpty())
-                    preco.error = "Este campo é obrigatório"
-
-                if (autonomia.text.toString().isEmpty())
-                    autonomia.error = "Este campo é obrigatório"
+                //findViewById<EditText>(R.id.edit_distancia).setError("Este campo é obrigatório")
             }
         }
     }
