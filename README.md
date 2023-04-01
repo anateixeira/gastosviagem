@@ -1,3 +1,3 @@
 # Gasto Viagem
 
-Aplicativo simples para calculo de gasto de viagem. 
+Aplicativo simples para cálculo de gasto de viagem. 
